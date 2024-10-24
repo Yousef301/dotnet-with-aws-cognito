@@ -1,7 +1,9 @@
 ﻿using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentityProvider.Model;
+using CognitoAuth.Application.DTOs.Auth;
 using CognitoAuth.Application.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
+using SignUpRequest = Amazon.CognitoIdentityProvider.Model.SignUpRequest;
 
 namespace CognitoAuth.Application.Services.Implementations;
 
@@ -22,7 +24,7 @@ public class CognitoService : ICognitoService
                       ?? throw new ArgumentNullException(nameof(configuration));
     }
 
-    public async Task<SignUpResponse> SignUpAsync(DTOs.SignUpRequest request)
+    public async Task<SignUpResponse> SignUpAsync(DTOs.Auth.SignUpRequest request)
     {
         var signUpRequest = new SignUpRequest
         {
@@ -38,9 +40,7 @@ public class CognitoService : ICognitoService
         return await _cognitoClient.SignUpAsync(signUpRequest);
     }
 
-    public async Task<AdminInitiateAuthResponse> SignInAsync(
-        string email,
-        string password)
+    public async Task<AdminInitiateAuthResponse> SignInAsync(SignInRequest request)
     {
         var authRequest = new AdminInitiateAuthRequest
         {
@@ -49,23 +49,21 @@ public class CognitoService : ICognitoService
             AuthFlow = AuthFlowType.ADMIN_NO_SRP_AUTH,
             AuthParameters = new Dictionary<string, string>
             {
-                { "USERNAME", email },
-                { "PASSWORD", password }
+                { "USERNAME", request.Email },
+                { "PASSWORD", request.Password }
             }
         };
 
         return await _cognitoClient.AdminInitiateAuthAsync(authRequest);
     }
 
-    public async Task<ConfirmSignUpResponse> ConfirmSignUpAsync(
-        string email,
-        string confirmationCode)
+    public async Task<ConfirmSignUpResponse> ConfirmSignUpAsync(ConfirmEmailRequest request)
     {
         var confirmSignUpRequest = new ConfirmSignUpRequest
         {
             ClientId = _clientId,
-            Username = email,
-            ConfirmationCode = confirmationCode
+            Username = request.Email,
+            ConfirmationCode = request.ConfirmationCode
         };
 
         return await _cognitoClient.ConfirmSignUpAsync(confirmSignUpRequest);
