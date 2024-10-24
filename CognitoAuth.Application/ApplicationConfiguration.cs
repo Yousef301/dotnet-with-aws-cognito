@@ -9,7 +9,7 @@ public static class ApplicationConfiguration
 {
     public static IServiceCollection AddApplicationInfrastructure(this IServiceCollection services)
     {
-        services.AddScoped<IAmazonCognitoIdentityProvider>();
+        services.AddAWSService<IAmazonCognitoIdentityProvider>();
         services.AddScoped<ICognitoService, CognitoService>();
 
         return services;
