@@ -22,18 +22,16 @@ public class CognitoService : ICognitoService
                       ?? throw new ArgumentNullException(nameof(configuration));
     }
 
-    public async Task<SignUpResponse> SignUpAsync(
-        string email,
-        string password)
+    public async Task<SignUpResponse> SignUpAsync(DTOs.SignUpRequest request)
     {
         var signUpRequest = new SignUpRequest
         {
             ClientId = _clientId,
-            Username = email,
-            Password = password,
+            Username = request.Username,
+            Password = request.Password,
             UserAttributes = new List<AttributeType>
             {
-                new AttributeType { Name = "email", Value = email }
+                new AttributeType { Name = "email", Value = request.Email }
             }
         };
 
