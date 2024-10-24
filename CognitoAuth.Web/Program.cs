@@ -1,4 +1,4 @@
-using CognitoAuth.Application;
+using CognitoAuth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +8,7 @@ builder.Configuration
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
-builder.Services.AddApplicationInfrastructure();
+builder.Services.AddWebInfrastructure(builder.Configuration);
 
 builder.Services.AddSwaggerGen();
 
@@ -22,5 +22,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
