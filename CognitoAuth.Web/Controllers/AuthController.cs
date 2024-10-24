@@ -1,5 +1,6 @@
 ﻿using CognitoAuth.Application.DTOs.Auth;
 using CognitoAuth.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CognitoAuth.Controllers;
@@ -50,6 +51,24 @@ public class AuthController : ControllerBase
         {
             var result = await _cognitoService.ConfirmSignUpAsync(request);
             return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        try
+        {
+            var authorizationHeader = Request.Headers["Authorization"].FirstOrDefault();
+            var token = authorizationHeader!.Substring("Bearer ".Length).Trim();
+
+            await _cognitoService.GlobalSignOutAsync(token);
+            return Ok(new { message = "Successfully signed out" });
         }
         catch (Exception ex)
         {
