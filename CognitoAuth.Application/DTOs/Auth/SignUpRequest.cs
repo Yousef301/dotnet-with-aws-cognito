@@ -1,4 +1,4 @@
-﻿namespace CognitoAuth.Application.DTOs;
+﻿namespace CognitoAuth.Application.DTOs.Auth;
 
 public record SignUpRequest
 {
