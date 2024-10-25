@@ -29,11 +29,11 @@ public class CognitoService : ICognitoService
         var signUpRequest = new SignUpRequest
         {
             ClientId = _clientId,
-            Username = request.Username,
+            Username = request.Email,
             Password = request.Password,
             UserAttributes = new List<AttributeType>
             {
-                new AttributeType { Name = "email", Value = request.Email }
+                new AttributeType { Name = "name", Value = request.Name }
             }
         };
 
