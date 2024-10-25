@@ -22,7 +22,12 @@ public class AuthController : ControllerBase
         try
         {
             var result = await _cognitoService.SignUpAsync(request);
-            return Ok(result);
+
+            return Ok(new SignUpResponse
+            {
+                Email = request.Email,
+                UserConfirmed = result.UserConfirmed
+            });
         }
         catch (Exception ex)
         {

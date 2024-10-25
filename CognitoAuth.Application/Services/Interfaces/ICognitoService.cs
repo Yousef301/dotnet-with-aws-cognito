@@ -2,6 +2,7 @@
 using CognitoAuth.Application.DTOs.Auth;
 using SignUpRequest = CognitoAuth.Application.DTOs.Auth.SignUpRequest;
 using SignInRequest = CognitoAuth.Application.DTOs.Auth.SignInRequest;
+using SignUpResponse = Amazon.CognitoIdentityProvider.Model.SignUpResponse;
 
 namespace CognitoAuth.Application.Services.Interfaces;
 
