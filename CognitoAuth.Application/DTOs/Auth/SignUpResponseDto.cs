@@ -1,6 +1,6 @@
 ﻿namespace CognitoAuth.Application.DTOs.Auth;
 
-public class SignUpResponse
+public class SignUpResponseDto
 {
     public string Email { get; set; }
     public bool UserConfirmed { get; set; }

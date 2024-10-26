@@ -3,8 +3,6 @@ using Amazon.CognitoIdentityProvider.Model;
 using CognitoAuth.Application.DTOs.Auth;
 using CognitoAuth.Application.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
-using SignUpRequest = Amazon.CognitoIdentityProvider.Model.SignUpRequest;
-using SignUpResponse = Amazon.CognitoIdentityProvider.Model.SignUpResponse;
 
 namespace CognitoAuth.Application.Services.Implementations;
 
@@ -25,23 +23,23 @@ public class CognitoService : ICognitoService
                       ?? throw new ArgumentNullException(nameof(configuration));
     }
 
-    public async Task<SignUpResponse> SignUpAsync(DTOs.Auth.SignUpRequest request)
+    public async Task<SignUpResponse> SignUpAsync(DTOs.Auth.SignUpRequestDto requestDto)
     {
         var signUpRequest = new SignUpRequest
         {
             ClientId = _clientId,
-            Username = request.Email,
-            Password = request.Password,
+            Username = requestDto.Email,
+            Password = requestDto.Password,
             UserAttributes = new List<AttributeType>
             {
-                new AttributeType { Name = "name", Value = request.Name }
+                new AttributeType { Name = "name", Value = requestDto.Name }
             }
         };
 
         return await _cognitoClient.SignUpAsync(signUpRequest);
     }
 
-    public async Task<AdminInitiateAuthResponse> SignInAsync(SignInRequest request)
+    public async Task<AdminInitiateAuthResponse> SignInAsync(SignInRequestDto requestDto)
     {
         var authRequest = new AdminInitiateAuthRequest
         {
@@ -50,24 +48,35 @@ public class CognitoService : ICognitoService
             AuthFlow = AuthFlowType.ADMIN_NO_SRP_AUTH,
             AuthParameters = new Dictionary<string, string>
             {
-                { "USERNAME", request.Email },
-                { "PASSWORD", request.Password }
+                { "USERNAME", requestDto.Email },
+                { "PASSWORD", requestDto.Password }
             }
         };
 
         return await _cognitoClient.AdminInitiateAuthAsync(authRequest);
     }
 
-    public async Task<ConfirmSignUpResponse> ConfirmSignUpAsync(ConfirmEmailRequest request)
+    public async Task<ConfirmSignUpResponse> ConfirmSignUpAsync(ConfirmEmailRequestDto requestDto)
     {
         var confirmSignUpRequest = new ConfirmSignUpRequest
         {
             ClientId = _clientId,
-            Username = request.Email,
-            ConfirmationCode = request.ConfirmationCode
+            Username = requestDto.Email,
+            ConfirmationCode = requestDto.ConfirmationCode
         };
 
         return await _cognitoClient.ConfirmSignUpAsync(confirmSignUpRequest);
+    }
+
+    public async Task ResendConfirmationCodeAsync(string email)
+    {
+        var codeRequest = new ResendConfirmationCodeRequest
+        {
+            ClientId = _clientId,
+            Username = email,
+        };
+
+        await _cognitoClient.ResendConfirmationCodeAsync(codeRequest);
     }
 
     public async Task GlobalSignOutAsync(string accessToken)
@@ -78,5 +87,41 @@ public class CognitoService : ICognitoService
         };
 
         await _cognitoClient.GlobalSignOutAsync(signOutRequest);
+    }
+
+    public async Task<ForgotPasswordResponse> ForgotPasswordAsync(string email)
+    {
+        var request = new ForgotPasswordRequest
+        {
+            ClientId = _clientId,
+            Username = email
+        };
+
+        return await _cognitoClient.ForgotPasswordAsync(request);
+    }
+
+    public async Task<ConfirmForgotPasswordResponse> ConfirmForgotPasswordAsync(ForgotPasswordRequestDto requestDto)
+    {
+        var forgotPasswordRequest = new ConfirmForgotPasswordRequest
+        {
+            ClientId = _clientId,
+            Username = requestDto.Email,
+            ConfirmationCode = requestDto.VerificationCode,
+            Password = requestDto.NewPassword
+        };
+
+        return await _cognitoClient.ConfirmForgotPasswordAsync(forgotPasswordRequest);
+    }
+
+    public async Task<ChangePasswordResponse> ChangePasswordAsync(ChangePasswordRequestDto request)
+    {
+        var changePasswordRequest = new ChangePasswordRequest
+        {
+            AccessToken = request.AccessToken,
+            PreviousPassword = request.PreviousPassword,
+            ProposedPassword = request.NewPassword
+        };
+
+        return await _cognitoClient.ChangePasswordAsync(changePasswordRequest);
     }
 }

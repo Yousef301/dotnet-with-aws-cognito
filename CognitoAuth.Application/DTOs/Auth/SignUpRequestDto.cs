@@ -1,6 +1,6 @@
 ﻿namespace CognitoAuth.Application.DTOs.Auth;
 
-public record SignUpRequest
+public record SignUpRequestDto
 {
     public string Email { get; init; }
     public string Name { get; init; }
