@@ -23,7 +23,7 @@ public class CognitoService : ICognitoService
                       ?? throw new ArgumentNullException(nameof(configuration));
     }
 
-    public async Task<SignUpResponse> SignUpAsync(DTOs.Auth.SignUpRequestDto requestDto)
+    public async Task<SignUpResponse> SignUpAsync(SignUpRequestDto requestDto)
     {
         var signUpRequest = new SignUpRequest
         {

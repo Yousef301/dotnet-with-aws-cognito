@@ -2,7 +2,7 @@
 
 public class ChangePasswordRequestDto
 {
-    public string AccessToken { get; set; }
+    public string? AccessToken { get; set; }
     public string PreviousPassword { get; set; }
     public string NewPassword { get; set; }
 }

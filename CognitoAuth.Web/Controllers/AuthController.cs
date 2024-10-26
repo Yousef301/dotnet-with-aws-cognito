@@ -49,7 +49,7 @@ public class AuthController : ControllerBase
         }
     }
 
-    [HttpPost("confirm")]
+    [HttpPost("verify-email")]
     public async Task<IActionResult> ConfirmSignUp([FromBody] ConfirmEmailRequestDto requestDto)
     {
         try
@@ -63,8 +63,72 @@ public class AuthController : ControllerBase
         }
     }
 
+    [HttpPost("resend-verification")]
+    public async Task<IActionResult> ResendConfirmationCode([FromBody] BaseAuthDto request)
+    {
+        try
+        {
+            await _cognitoService.ResendConfirmationCodeAsync(request.Email);
+
+            return Ok(new { message = "Confirmation code resent" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] BaseAuthDto request)
+    {
+        try
+        {
+            await _cognitoService.ForgotPasswordAsync(request.Email);
+
+            return Ok(new { message = "Password reset code sent" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ForgotPasswordRequestDto request)
+    {
+        try
+        {
+            await _cognitoService.ConfirmForgotPasswordAsync(request);
+
+            return Ok(new { message = "Password reset successful" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     [Authorize]
-    [HttpPost("logout")]
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDto request)
+    {
+        try
+        {
+            request.AccessToken = Request.Headers["Authorization"]
+                .FirstOrDefault()!.Substring("Bearer ".Length).Trim();
+
+            await _cognitoService.ChangePasswordAsync(request);
+
+            return Ok(new { message = "Password changed successfully" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [Authorize]
+    [HttpGet("logout")]
     public async Task<IActionResult> Logout()
     {
         try
