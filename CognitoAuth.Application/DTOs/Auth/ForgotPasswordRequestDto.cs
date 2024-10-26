@@ -1,8 +1,7 @@
 ﻿namespace CognitoAuth.Application.DTOs.Auth;
 
-public class ForgotPasswordRequestDto
+public record ForgotPasswordRequestDto : BaseAuthDto
 {
-    public string Email { get; set; }
     public string VerificationCode { get; set; }
     public string NewPassword { get; set; }
 }

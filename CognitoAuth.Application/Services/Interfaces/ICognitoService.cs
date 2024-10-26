@@ -12,4 +12,5 @@ public interface ICognitoService
     public Task ResendConfirmationCodeAsync(string email);
     public Task<ForgotPasswordResponse> ForgotPasswordAsync(string email);
     public Task<ConfirmForgotPasswordResponse> ConfirmForgotPasswordAsync(ForgotPasswordRequestDto requestDto);
+    public Task<ChangePasswordResponse> ChangePasswordAsync(ChangePasswordRequestDto request);
 }
