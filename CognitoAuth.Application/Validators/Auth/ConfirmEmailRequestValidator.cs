@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace CognitoAuth.Application.Validators.Auth;
 
-public class ConfirmEmailRequestValidator : AbstractValidator<ConfirmEmailRequest>
+public class ConfirmEmailRequestValidator : AbstractValidator<ConfirmEmailRequestDto>
 {
     public ConfirmEmailRequestValidator()
     {

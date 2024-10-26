@@ -1,15 +1,15 @@
 ﻿using Amazon.CognitoIdentityProvider.Model;
 using CognitoAuth.Application.DTOs.Auth;
-using SignUpRequest = CognitoAuth.Application.DTOs.Auth.SignUpRequest;
-using SignInRequest = CognitoAuth.Application.DTOs.Auth.SignInRequest;
-using SignUpResponse = Amazon.CognitoIdentityProvider.Model.SignUpResponse;
 
 namespace CognitoAuth.Application.Services.Interfaces;
 
 public interface ICognitoService
 {
-    public Task<SignUpResponse> SignUpAsync(SignUpRequest request);
-    public Task<AdminInitiateAuthResponse> SignInAsync(SignInRequest request);
-    public Task<ConfirmSignUpResponse> ConfirmSignUpAsync(ConfirmEmailRequest request);
+    public Task<SignUpResponse> SignUpAsync(SignUpRequestDto requestDto);
+    public Task<AdminInitiateAuthResponse> SignInAsync(SignInRequestDto requestDto);
+    public Task<ConfirmSignUpResponse> ConfirmSignUpAsync(ConfirmEmailRequestDto requestDto);
     public Task GlobalSignOutAsync(string accessToken);
+    public Task ResendConfirmationCodeAsync(string email);
+    public Task<ForgotPasswordResponse> ForgotPasswordAsync(string email);
+    public Task<ConfirmForgotPasswordResponse> ConfirmForgotPasswordAsync(ForgotPasswordRequestDto requestDto);
 }

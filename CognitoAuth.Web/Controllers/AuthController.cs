@@ -17,15 +17,15 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("signup")]
-    public async Task<IActionResult> SignUp([FromBody] SignUpRequest request)
+    public async Task<IActionResult> SignUp([FromBody] SignUpRequestDto requestDto)
     {
         try
         {
-            var result = await _cognitoService.SignUpAsync(request);
+            var result = await _cognitoService.SignUpAsync(requestDto);
 
-            return Ok(new SignUpResponse
+            return Ok(new SignUpResponseDto
             {
-                Email = request.Email,
+                Email = requestDto.Email,
                 UserConfirmed = result.UserConfirmed
             });
         }
@@ -36,11 +36,11 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("signin")]
-    public async Task<IActionResult> SignIn([FromBody] SignInRequest request)
+    public async Task<IActionResult> SignIn([FromBody] SignInRequestDto requestDto)
     {
         try
         {
-            var result = await _cognitoService.SignInAsync(request);
+            var result = await _cognitoService.SignInAsync(requestDto);
             return Ok(new { token = result.AuthenticationResult.AccessToken });
         }
         catch (Exception ex)
@@ -50,11 +50,11 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("confirm")]
-    public async Task<IActionResult> ConfirmSignUp([FromBody] ConfirmEmailRequest request)
+    public async Task<IActionResult> ConfirmSignUp([FromBody] ConfirmEmailRequestDto requestDto)
     {
         try
         {
-            var result = await _cognitoService.ConfirmSignUpAsync(request);
+            var result = await _cognitoService.ConfirmSignUpAsync(requestDto);
             return Ok(result);
         }
         catch (Exception ex)

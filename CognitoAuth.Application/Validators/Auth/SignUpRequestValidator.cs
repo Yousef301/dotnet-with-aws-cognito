@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace CognitoAuth.Application.Validators.Auth;
 
-public class SignUpRequestValidator : AbstractValidator<SignUpRequest>
+public class SignUpRequestValidator : AbstractValidator<SignUpRequestDto>
 {
     public SignUpRequestValidator()
     {
